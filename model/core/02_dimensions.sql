@@ -1,8 +1,4 @@
--- RWB Hackathon / Capibara: загрузка справочников в CORE.
--- Выполнять ПОСЛЕ 01_schema.sql и ДО 03_facts.sql.
--- Таблицы уже созданы в 01_schema.sql; здесь только INSERT.
-
--- 1. Все 99 441 исходные записи покупателей. DISTINCT по customer_unique_id
+--- 1. Все 99 441 исходные записи покупателей. DISTINCT по customer_unique_id
 -- ЗАПРЕЩЁН: customer_id нужен для связи заказов с покупателями.
 INSERT INTO core.customers (
     customer_id, customer_unique_id, customer_zip_code_prefix,
@@ -32,8 +28,6 @@ INSERT INTO core.categories (category_id, category_name_pt, category_name_en)
 VALUES ('__unknown__', NULL, 'Unknown');
 
 -- 4. Все исходные непустые категории товаров, даже без английского перевода.
--- Группировка переводов защищает от случайного размножения категорий,
--- если в raw.product_category_translation появится повтор кода.
 WITH source_categories AS (
     SELECT DISTINCT NULLIF(BTRIM(product_category_name), '') AS category_id
     FROM raw.products
@@ -55,7 +49,6 @@ LEFT JOIN translations t USING (category_id)
 WHERE sc.category_id IS NOT NULL;
 
 -- 5. Товары. Неизвестную категорию НЕ отбрасываем.
--- Исправляем только опечатку leng(h)t -> length в имени целевого поля.
 INSERT INTO core.products (
     product_id, category_id, product_name_length,
     product_description_length, product_photos_qty, product_weight_g,
