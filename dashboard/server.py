@@ -1,14 +1,3 @@
-#!/usr/bin/env python3
-"""Дашборд Capibara: метрики из core и SQL-консоль.
-
-Запуск из корня репозитория (после  bash model/build.sh):
-    python3 dashboard/server.py            # http://127.0.0.1:8000
-    python3 dashboard/server.py --port 8001
-
-Приложение подключается под ролью viewer (model/98_viewer_role.sql): она может только читать core и mart.
-Права на чтение и запрет записи обеспечивает база, поэтому консоль безопасна, даже если ввести любой SQL.
-Сервер слушает только 127.0.0.1.
-"""
 import argparse
 import datetime
 import decimal
@@ -21,7 +10,7 @@ from pathlib import Path
 import psycopg2
 
 HERE = Path(__file__).resolve().parent
-QUERIES = HERE.parent / "queries"
+QUERIES = HERE.parent / "model" / "queries"
 MAX_ROWS = 1000
 MAX_BODY = 100_000
 
